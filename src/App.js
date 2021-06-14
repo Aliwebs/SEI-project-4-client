@@ -1,16 +1,25 @@
-import React from 'react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
+import Login from './components/auth/Login'
+import Profile from './components/auth/Profile'
+import Register from './components/auth/Register'
+// import Home from './components/common/Home'
+import SecureRoute from './components/common/SecureRoute'
 
 function App() {
-  React.useEffect(() => {
-    const getData = async () => {
-      const res = await fetch('/api/endpoint') // * <-- replace with your endpoint
-      const data = await res.json()
-      console.log(data)
-    }
-    getData()
-  })
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <SecureRoute exact path="/logout">
+          <Login logout={true} />
+        </SecureRoute>
+        <Route path="/register" component={Register} />
+        <SecureRoute path="/home" component={Profile} />
 
-  return <h1>Hello World</h1>
+      </Switch>
+    </Router>
+  )
 }
 
 export default App

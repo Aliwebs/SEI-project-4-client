@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  font-family: 'Raleway',
+    sans-serif;
+  box-sizing: border-box;
+  background-image: url('https://wallpaperaccess.com/full/471266.jpg');
+  // background-color: rgba($color: black, $alpha: 0.4);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  display: flex;
+  flex-flow: column wrap;
+  min-width: 300px;
+  max-width: 600px;
+
+  * {
+    margin: 5px 0;
+  }
+
+  div {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    color: white;
+
+    a {
+      text-decoration: none;
+      color: rgb(113, 236, 250);
+      font-style: italic;
+    }
+  }
+
+  h1 {
+    text-align: center;
+    color: white;
+  }
+
+  input {
+    border: 2px solid rgba($color: #a39e9e, $alpha: 0.5);
+    border-radius: 5px;
+    padding: 10px 10px;
+  }
+
+  button {
+    display: block;
+    padding: 10px 0;
+    background-color: none;
+    border: none;
+  }
+
+  button:hover {
+    cursor: pointer;
+    background-color: black;
+    color: white;
+  }
+}
+
+.alert {
+  color: rgb(251, 129, 129);
+  text-align: center;
+}
+
+.box-alert {
+  border: 2px solid rgba($color: red, $alpha: 0.8);
+}
+
+
+// Profile Page styles
+
+#profile-header div {
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 300px;
+  max-height: 600px;
+}
