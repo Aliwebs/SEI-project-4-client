@@ -38,7 +38,7 @@ function Login({ logout }) {
   }
 
   return (
-    <main>
+    <main id="login">
       <form onSubmit={handleSubmit}>
         <h1>Login</h1>
         {formErrors.detail && <h3 className="alert">Incorrect Login Details</h3>}

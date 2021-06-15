@@ -32,7 +32,7 @@ function Register() {
   }
 
   return (
-    <main>
+    <main id="register">
       <form onSubmit={handleSubmit}>
         <h1>Register</h1>
         <input

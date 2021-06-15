@@ -10,17 +10,19 @@ body {
   font-family: 'Raleway',
     sans-serif;
   box-sizing: border-box;
-  background-image: url('https://wallpaperaccess.com/full/471266.jpg');
   // background-color: rgba($color: black, $alpha: 0.4);
-  background-size: cover;
-  background-repeat: no-repeat;
+  // background-size: cover;
+  // background-repeat: no-repeat;
 }
 
 
-main {
+#login,
+#register {
   display: flex;
   justify-content: center;
   align-items: center;
+
+
 }
 
 form {
@@ -38,7 +40,7 @@ form {
     display: flex;
     flex-direction: column;
     margin: 5px;
-    color: white;
+
 
     a {
       text-decoration: none;
@@ -49,7 +51,7 @@ form {
 
   h1 {
     text-align: center;
-    color: white;
+    color: black;
   }
 
   input {
@@ -72,6 +74,8 @@ form {
   }
 }
 
+
+
 .alert {
   color: rgb(251, 129, 129);
   text-align: center;
@@ -81,12 +85,124 @@ form {
   border: 2px solid rgba($color: red, $alpha: 0.8);
 }
 
+.button-alert {
+  background-color: red;
+  color: white;
+}
+
 
 // Profile Page styles
 
-#profile-header div {
+#profile-container {
   background-repeat: no-repeat;
-  width: 100%;
-  min-height: 300px;
+  background-position: center;
+  background-color: black;
+  background-size: contain;
+  min-height: 400px;
   max-height: 600px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  h6 {
+    font-family: 'Raleway',
+      sans-serif;
+    text-transform: capitalize;
+    font-size: 2em;
+    color: white;
+    margin: 0 0 40px 10px;
+  }
+
+  .circle {
+    position: relative;
+    width: 100px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    margin: 0 0 10px 10px;
+    text-align: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+
+
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.472);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+    }
+  }
+
+  .circle:hover {
+    cursor: pointer;
+  }
+
+  button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 2px;
+    background-color: black;
+    color: white;
+  }
+
+  button:hover {
+    cursor: pointer;
+  }
+}
+
+#profile-main {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin: 30px 30px;
+}
+
+.modal {
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 300px;
+    padding: 60px;
+    text-align: center;
+
+    label {
+      margin-bottom: 10px;
+    }
+
+    input {
+      border: 2px solid rgba($color: #a39e9e, $alpha: 0.5);
+      border-radius: 5px;
+      padding: 10px 10px;
+    }
+
+  }
 }
