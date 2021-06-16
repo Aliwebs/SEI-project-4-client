@@ -18,6 +18,7 @@ export default function useForm(initalState) {
     setFormErrors,
     handleChange,
     isChanged,
+    setIsChanged,
   }
 }
 

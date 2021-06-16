@@ -9,4 +9,5 @@ function SecureRoute({ component, ...rest }) {
   return <Redirect to="/" />
 }
 
+
 export default SecureRoute

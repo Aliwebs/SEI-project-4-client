@@ -30,7 +30,7 @@ function Register() {
       }
     }
   }
-
+  
   return (
     <main id="register">
       <form onSubmit={handleSubmit}>

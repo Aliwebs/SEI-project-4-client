@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import useForm from '../../hooks/useForm'
 import { getToken, getPayload } from '../../lib/auth'
 
-function Profile() {
+function Profile({ profile, setProfile }) {
   const [isEditingBackground, setIsEditingBackground] = useState(false)
   const [isEditingProfile, setIsEditingProfile] = useState(false)
-  const { formdata, setFormData, handleChange, isChanged } = useForm({
+  const { formdata, setFormData, setFormErrors, handleChange, isChanged, setIsChanged } = useForm({
     username: '',
     firstName: '',
     lastName: '',
@@ -15,15 +15,20 @@ function Profile() {
     dob: '',
   })
   useEffect(() => {
-    axios.get(`/api/auth/profile/${getPayload().sub}/`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
-      .then(res => {
-        if (res.data.dob === null) res.data.dob = ''
-        setFormData(res.data)
+    if (profile) {
+      setFormData(profile)
+    } else {
+      axios.get(`/api/auth/profile/${getPayload().sub}/`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
       })
-      .catch(err => console.log(err))
-  }, [setFormData])
+        .then(res => {
+          if (res.data.dob === null) res.data.dob = ''
+          console.log(res.data)
+          setProfile(res.data)
+        })
+        .catch(err => console.log(err))
+    }
+  }, [setFormData, profile, setProfile])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -32,10 +37,14 @@ function Profile() {
       const res = await axios.put(`/api/auth/profile/${getPayload().sub}/`, formdata, {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
-      console.log(res.data)
-      setFormData(res.data)
+      setProfile(res.data)
+      setIsChanged(false)
     } catch (err) {
-      console.log(err.response.data)
+      if (err.response) {
+        console.log(err.response.data)
+        setFormErrors(err.response.data)
+      }
+      console.log(err)
     }
   }
 
@@ -65,42 +74,41 @@ function Profile() {
       }
     })
   })
-
   return (
     <>
-
-      <header>
-        {formdata ?
+      {formdata ?
+        <header>
           <div id="profile-container" style={{ backgroundImage: `url(${formdata.backgroundPic})` }}>
             <div className="circle" onClick={handleProfileEdit}>
               <img src={formdata.profilePic} />
               <p>Edit</p>
             </div>
-            <h6>{formdata.username}</h6>
+            <h6 className="username">{formdata.username}</h6>
             <button onClick={handleBackgroundEdit} type="button">Edit</button>
           </div>
-          : <p>...loading</p>}
-        <div className="modal" style={{ display: `${isEditingBackground ? 'flex' : 'none'}` }}>
-          <div>
-            <label>Change Background Picture</label>
-            <input
-              onChange={handleChange}
-              name="backgroundPic"
-              value={formdata.backgroundPic}
-            />
+          <div className="modal" style={{ display: `${isEditingBackground ? 'flex' : 'none'}` }}>
+            <div>
+              <label>Change Background Picture</label>
+              <input
+                onChange={handleChange}
+                name="backgroundPic"
+                value={formdata.backgroundPic}
+              />
+            </div>
           </div>
-        </div>
-        <div className="modal" style={{ display: `${isEditingProfile ? 'flex' : 'none'}` }}>
-          <div>
-            <label>Change Profile Picture</label>
-            <input
-              onChange={handleChange}
-              name="profilePic"
-              value={formdata.profilePic}
-            />
+          <div className="modal" style={{ display: `${isEditingProfile ? 'flex' : 'none'}` }}>
+            <div>
+              <label>Change Profile Picture</label>
+              <input
+                onChange={handleChange}
+                name="profilePic"
+                value={formdata.profilePic}
+              />
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+        : <p>...loading</p>}
+
       <main id="profile-main">
         {formdata &&
           <form onSubmit={handleSubmit}>
@@ -144,7 +152,6 @@ function Profile() {
           </form>
         }
       </main>
-
     </>
   )
 }

@@ -6,12 +6,12 @@ import { isAuthenticated } from '../../lib/auth'
 
 function Login({ logout }) {
   const history = useHistory()
-
+  //code below only runs if coming from /logout
   if (logout) {
     localStorage.removeItem('token')
   }
 
-  //code below only runs if coming from /logout
+  //if statement below runs if use is already authenticated when coming to the log in page
   if (isAuthenticated()) {
     history.push('/home')
   }
@@ -36,7 +36,7 @@ function Login({ logout }) {
       }
     }
   }
-
+  console.log('here login')
   return (
     <main id="login">
       <form onSubmit={handleSubmit}>
