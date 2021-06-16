@@ -1,27 +1,18 @@
 import axios from 'axios'
-import { useHistory, Link } from 'react-router-dom'
-
+import { useHistory, Link, Redirect } from 'react-router-dom'
 import useForm from '../../hooks/useForm'
-import { isAuthenticated } from '../../lib/auth'
 
-function Login({ logout }) {
+function Login({ profile }) {
   const history = useHistory()
-  //code below only runs if coming from /logout
-  if (logout) {
-    localStorage.removeItem('token')
-  }
-
-  //if statement below runs if use is already authenticated when coming to the log in page
-  if (isAuthenticated()) {
-    history.push('/home')
-  }
 
   const { formdata, formErrors, setFormErrors, handleChange } = useForm({
     email: '',
     password: '',
   })
 
-
+  if (profile) {
+    return <Redirect to="/home" />
+  }
   const handleSubmit = async event => {
     event.preventDefault()
     try {
@@ -31,12 +22,11 @@ function Login({ logout }) {
     } catch (err) {
       const errors = err.response ? err.response.data : undefined
       if (errors) {
-        console.log(err.response.data)
         setFormErrors(errors)
       }
     }
   }
-  console.log('here login')
+
   return (
     <main id="login">
       <form onSubmit={handleSubmit}>

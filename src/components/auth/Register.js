@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory, Link, Redirect } from 'react-router-dom'
 import useForm from '../../hooks/useForm'
 
-function Register() {
+function Register({ profile }) {
   const history = useHistory()
   const { formdata, formErrors, setFormErrors, handleChange } = useForm({
     username: '',
@@ -11,26 +11,18 @@ function Register() {
     passwordConfirmation: '',
   })
 
+  if (profile) {
+    return <Redirect to="/home" />
+  }
+
   const handleSubmit = async event => {
     event.preventDefault()
 
-    try {
-      await axios.post('/api/auth/register/', formdata)
-      history.push('/')
-    } catch (err) {
-      const errors = err.response ? err.response.data : undefined
-      if (errors) {
-        console.log(err.response.data)
-        setFormErrors({
-          username: errors.username ? errors.username[0] : undefined,
-          email: errors.email ? errors.email[0] : undefined,
-          password: errors.password ? errors.password : undefined,
-          passwordConfirmation: errors.passwordConfirmation ? errors.passwordConfirmation[0] : undefined,
-        })
-      }
-    }
+    axios.post('/api/auth/register/', formdata)
+      .then(() => history.push('/'))
+      .catch(err => setFormErrors(err.response.data))
   }
-  
+
   return (
     <main id="register">
       <form onSubmit={handleSubmit}>
@@ -41,7 +33,7 @@ function Register() {
           placeholder="Username"
           className={formErrors.username ? 'box-alert' : ''}
         />
-        {formErrors.username && <p className="alert">{formErrors.username}</p>}
+        {formErrors.username && formErrors.username.map(err => <p key={err} className="alert">{err}</p>)}
 
         <input
           name="email"
@@ -68,7 +60,7 @@ function Register() {
           placeholder="Password Confirmation"
           className={formErrors.passwordConfirmation ? 'box-alert' : ''}
         />
-        {formErrors.passwordConfirmation && <p className="alert">{formErrors.passwordConfirmation}</p>}
+        {formErrors.password && formErrors.password.map(err => <p key={err} className="alert">{err}</p>)}
 
         <button type='submit'>Submit</button>
         <div>

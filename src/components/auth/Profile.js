@@ -4,8 +4,7 @@ import useForm from '../../hooks/useForm'
 import { getToken, getPayload } from '../../lib/auth'
 
 function Profile({ profile, setProfile }) {
-  const [isEditingBackground, setIsEditingBackground] = useState(false)
-  const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [modalState, setModalState] = useState(null)
   const { formdata, setFormData, setFormErrors, handleChange, isChanged, setIsChanged } = useForm({
     username: '',
     firstName: '',
@@ -15,24 +14,14 @@ function Profile({ profile, setProfile }) {
     dob: '',
   })
   useEffect(() => {
-    if (profile) {
-      setFormData(profile)
-    } else {
-      axios.get(`/api/auth/profile/${getPayload().sub}/`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      })
-        .then(res => {
-          if (res.data.dob === null) res.data.dob = ''
-          console.log(res.data)
-          setProfile(res.data)
-        })
-        .catch(err => console.log(err))
-    }
-  }, [setFormData, profile, setProfile])
+    if (!profile) return
+
+    setFormData(profile)
+  }, [profile, setFormData])
+
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-
     try {
       const res = await axios.put(`/api/auth/profile/${getPayload().sub}/`, formdata, {
         headers: { Authorization: `Bearer ${getToken()}` },
@@ -48,56 +37,33 @@ function Profile({ profile, setProfile }) {
     }
   }
 
-  const handleBackgroundEdit = () => {
-    setIsEditingBackground(true)
-    setIsEditingProfile(false)
-  }
-  const handleProfileEdit = () => {
-    setIsEditingProfile(true)
-    setIsEditingBackground(false)
-  }
 
-  const modal = document.querySelectorAll('.modal')
-
-  modal.forEach(div => {
-    div.addEventListener('click', (e) => {
-      if (e.target.classList.contains('modal')) {
-        if (div.display === 'none') {
-          div.display = 'flex'
-          setIsEditingBackground(true)
-          setIsEditingProfile(true)
-        } else {
-          div.style.display = 'none'
-          setIsEditingBackground(false)
-          setIsEditingProfile(false)
-        }
-      }
-    })
-  })
   return (
     <>
       {formdata ?
         <header>
           <div id="profile-container" style={{ backgroundImage: `url(${formdata.backgroundPic})` }}>
-            <div className="circle" onClick={handleProfileEdit}>
+            <div className="circle" onClick={() => setModalState('profile')}>
               <img src={formdata.profilePic} />
               <p>Edit</p>
             </div>
             <h6 className="username">{formdata.username}</h6>
-            <button onClick={handleBackgroundEdit} type="button">Edit</button>
+            <button onClick={() => setModalState('background')} type="button">Edit</button>
           </div>
-          <div className="modal" style={{ display: `${isEditingBackground ? 'flex' : 'none'}` }}>
-            <div>
-              <label>Change Background Picture</label>
-              <input
-                onChange={handleChange}
-                name="backgroundPic"
-                value={formdata.backgroundPic}
-              />
+          {modalState === 'background' &&
+            <div className="modal" onClick={() => setModalState(null)}>
+              <div>
+                <label>Change Background Picture</label>
+                <input
+                  onChange={handleChange}
+                  name="backgroundPic"
+                  value={formdata.backgroundPic}
+                />
+              </div>
             </div>
-          </div>
-          <div className="modal" style={{ display: `${isEditingProfile ? 'flex' : 'none'}` }}>
-            <div>
+          }
+          {modalState === 'profile' && <div className="modal" onClick={() => setModalState(null)}>
+            <div >
               <label>Change Profile Picture</label>
               <input
                 onChange={handleChange}
@@ -105,9 +71,10 @@ function Profile({ profile, setProfile }) {
                 value={formdata.profilePic}
               />
             </div>
-          </div>
+          </div>}
         </header>
-        : <p>...loading</p>}
+        : <p>...loading</p>
+      }
 
       <main id="profile-main">
         {formdata &&
