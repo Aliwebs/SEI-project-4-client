@@ -51,8 +51,8 @@ function Profile({ profile, setProfile }) {
             <button onClick={() => setModalState('background')} type="button">Edit</button>
           </div>
           {modalState === 'background' &&
-            <div className="modal" onClick={() => setModalState(null)}>
-              <div>
+            <div className="modal">
+              <div onBlur={() => setModalState(null)}>
                 <label>Change Background Picture</label>
                 <input
                   onChange={handleChange}
@@ -62,16 +62,17 @@ function Profile({ profile, setProfile }) {
               </div>
             </div>
           }
-          {modalState === 'profile' && <div className="modal" onClick={() => setModalState(null)}>
-            <div >
-              <label>Change Profile Picture</label>
-              <input
-                onChange={handleChange}
-                name="profilePic"
-                value={formdata.profilePic}
-              />
-            </div>
-          </div>}
+          {modalState === 'profile' &&
+            <div className="modal">
+              <div onBlur={() => setModalState(null)}>
+                <label>Change Profile Picture</label>
+                <input
+                  onChange={handleChange}
+                  name="profilePic"
+                  value={formdata.profilePic}
+                />
+              </div>
+            </div>}
         </header>
         : <p>...loading</p>
       }

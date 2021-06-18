@@ -64,7 +64,7 @@ form {
   }
 
   div {
-    text-align: center;
+    text-align: left;
     display: flex;
     flex-direction: column;
     margin: 5px;
@@ -135,6 +135,8 @@ form {
 
   .circle {
     margin: 0 0 10px 10px;
+    width: 100px;
+    height: 100px;
 
     p {
       display: flex;
@@ -177,7 +179,7 @@ form {
 #profile-main {
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: center;
   margin: 30px 30px;
 }
 
@@ -219,8 +221,8 @@ form {
 
 .circle {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background-color: white;
   display: flex;
@@ -242,4 +244,21 @@ form {
   font-family: 'Raleway',
     sans-serif;
   text-transform: capitalize;
+}
+
+#profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin: 10px;
+
+  p {
+    margin: 0 5px 0 0;
+  }
+}
+
+#posts {
+  display: flex;
+  flex-direction: column;
+  max-width: 30%;
 }
