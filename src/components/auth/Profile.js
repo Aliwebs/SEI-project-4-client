@@ -1,10 +1,17 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import useForm from '../../hooks/useForm'
 import { getToken, getPayload } from '../../lib/auth'
+import ProfileBody from '../misc/ProfileBody'
+import ProfileHeader from '../misc/ProfileHeader'
 
 function Profile({ profile, setProfile }) {
-  const [modalState, setModalState] = useState(null)
+  const { id } = useParams()
+  let me = false
+  if (!id) {
+    me = true
+  }
   const { formdata, setFormData, setFormErrors, handleChange, isChanged, setIsChanged } = useForm({
     username: '',
     firstName: '',
@@ -14,11 +21,18 @@ function Profile({ profile, setProfile }) {
     dob: '',
   })
   useEffect(() => {
-    if (!profile) return
+    if (!profile && !id) return
 
-    setFormData(profile)
-  }, [profile, setFormData])
-
+    if (id) {
+      axios.get(`/api/auth/profile/${id}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      })
+        .then(res => setFormData(res.data))
+        .catch((err) => console.log(err))
+    } else {
+      setFormData(profile)
+    }
+  }, [profile, setFormData, id])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -36,89 +50,24 @@ function Profile({ profile, setProfile }) {
       console.log(err)
     }
   }
-
-
+  console.log(formdata)
   return (
     <>
-      {formdata ?
-        <header>
-          <div id="profile-container" style={{ backgroundImage: `url(${formdata.backgroundPic})` }}>
-            <div className="circle" onClick={() => setModalState('profile')}>
-              <img src={formdata.profilePic} />
-              <p>Edit</p>
-            </div>
-            <h6 className="username">{formdata.username}</h6>
-            <button onClick={() => setModalState('background')} type="button">Edit</button>
-          </div>
-          {modalState === 'background' &&
-            <div className="modal">
-              <div onBlur={() => setModalState(null)}>
-                <label>Change Background Picture</label>
-                <input
-                  onChange={handleChange}
-                  name="backgroundPic"
-                  value={formdata.backgroundPic}
-                />
-              </div>
-            </div>
-          }
-          {modalState === 'profile' &&
-            <div className="modal">
-              <div onBlur={() => setModalState(null)}>
-                <label>Change Profile Picture</label>
-                <input
-                  onChange={handleChange}
-                  name="profilePic"
-                  value={formdata.profilePic}
-                />
-              </div>
-            </div>}
-        </header>
-        : <p>...loading</p>
+      {formdata &&
+        <ProfileHeader
+          formdata={formdata}
+          handleChange={handleChange}
+          me={me}
+        />
       }
-
       <main id="profile-main">
-        {formdata &&
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Username</label>
-              <input
-                onChange={handleChange}
-                name="username"
-                placeholder="Username"
-                value={formdata.username}
-              />
-            </div>
-            <div>
-              <label>First Name</label>
-              <input
-                onChange={handleChange}
-                name="firstName"
-                placeholder="First Name"
-                value={formdata.firstName}
-              />
-            </div>
-            <div>
-              <label>Last Name</label>
-              <input
-                onChange={handleChange}
-                name="lastName"
-                placeholder="Last Name"
-                value={formdata.lastName}
-              />
-            </div>
-            <div>
-              <label>Date Of Birth</label>
-              <input
-                onChange={handleChange}
-                name="dob"
-                type="date"
-                value={formdata.dob}
-              />
-            </div>
-            <button type="submit" className={`${isChanged ? 'button-alert' : ''}`}>Save Changes</button>
-          </form>
-        }
+        {me ? <ProfileBody
+          formdata={formdata}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          isChanged={isChanged}
+        /> :
+          <p>Not me</p>}
       </main>
     </>
   )

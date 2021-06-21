@@ -37,8 +37,11 @@ function App() {
           <Login profile={profile} />
         </Route>
         <Route exact path="/register" component={Register} />
-        <SecureRoute path="/home" component={Home} />
-        <SecureRoute path="/profile">
+        <SecureRoute path="/home" >
+          <Home {...profile} />
+        </SecureRoute>
+        <SecureRoute path="/profile/:id" component={Profile} />
+        <SecureRoute path="/profile/">
           <Profile profile={profile} setProfile={setProfile} />
         </SecureRoute>
       </Switch>

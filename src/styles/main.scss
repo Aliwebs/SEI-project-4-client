@@ -260,5 +260,18 @@ form {
 #posts {
   display: flex;
   flex-direction: column;
-  max-width: 30%;
+  max-width: 50%;
+}
+
+.post {
+  border: 2px solid;
+  margin: 10px;
+  padding: 10px;
+}
+
+.modal-close span {
+  position: absolute;
+  display: block;
+  right: 10;
+  top: 10;
 }

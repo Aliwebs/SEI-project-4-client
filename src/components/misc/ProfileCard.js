@@ -1,10 +1,13 @@
-function ProfileCard({ profilePic, username }) {
+import { Link } from 'react-router-dom'
+import { getPayload } from '../../lib/auth'
+
+function ProfileCard({ profilePic, username, id }) {
   return (
     <div id="profile-card">
       <p>{username}</p>
-      <div className="circle">
+      <Link className="circle" to={id === getPayload().sub ? '/profile/' : `/profile/${id}`}>
         <img src={profilePic} />
-      </div>
+      </Link>
     </div>
   )
 }
