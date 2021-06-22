@@ -19,9 +19,14 @@ function Home(props) {
     axios.get('/api/posts/', {
       headers: { Authorization: `Bearer ${getToken()}` },
     })
-      .then(res => setPosts(res.data))
+      .then(res => {
+        const followers = props.followers.map(follower => follower.username)
+        const myFollows = res.data.filter(post => followers.includes(post.user.username))
+        const filteredPosts = [...myFollows, ...res.data?.filter(post => !followers.includes(post.user.username))]
+        setPosts(filteredPosts)
+      })
       .catch(err => console.log(err))
-  }, [updateData])
+  }, [updateData, props.followers])
 
 
   const handleImageUpload = (url) => {
@@ -36,19 +41,20 @@ function Home(props) {
       .then(() => {
         handleChange({ target: { name: 'content', value: '' } })
         handleChange({ target: { name: 'attachments', value: { url: '' } } })
+        formdata.attachments.url = ''
         setUpdateData(!updateData)
       })
       .catch(err => console.log(err?.response.data))
   }
-  console.log(posts)
   return (
     <div style={{ display: 'flex' }}>
       <aside>
         <h3>Following</h3>
         <div id="followers">
-          {props && props?.followers && props.followers.map(follower => (
-            <ProfileCard key={follower.id} {...follower} hideUsername={true} reverseUsername={true} />
-          ))}
+          {props && props.followers && props?.followers.length >= 1 ?
+            props.followers.map(follower => (
+              <ProfileCard key={follower.id} {...follower} hideUsername={true} reverseUsername={true} />
+            )) : <p>No followers...</p>}
         </div>
       </aside>
       <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -64,7 +70,9 @@ function Home(props) {
                 name="content"
                 value={formdata.content}
                 onChange={handleChange}
+                maxLength="250"
               />
+              <p>Characters remaining: {250 - formdata.content.length}</p>
               <ImageUpload onUpload={handleImageUpload} isPost />
               <div className="buttons">
                 <button className="btn-black" type="submit">Post</button>

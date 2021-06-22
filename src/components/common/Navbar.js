@@ -9,16 +9,13 @@ function Navbar({ profile }) {
     return history.push('/home')
   }
 
-  const handleSearch = () => {
-
+  const handleSearch = ({ target: { name, value } }) => {
+    
   }
 
 
   return (
     <nav>
-      <div className="modal">
-
-      </div>
       <div className="navbar-menu">
         <li><Link to='/'>Home</Link></li>
         <li><input placeholder="search..." name="search" className="input" onChange={handleSearch} /></li>

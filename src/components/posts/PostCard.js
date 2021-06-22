@@ -68,7 +68,9 @@ function PostCard({ id, content, createdAt, attachments, user, comments, updateD
             placeholder="..."
             onChange={handleChange}
             name="content"
+            maxLength="100"
           />
+          <p>Characters remaining: {100 - formdata.content.length}</p>
           <button>Comment</button>
         </form>
         <div>

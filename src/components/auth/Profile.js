@@ -18,7 +18,7 @@ function Profile({ profile, updateProfile }) {
   if (!id) {
     me = true
   }
-  const { formdata, setFormData, setFormErrors, handleChange, isChanged, setIsChanged } = useForm({
+  const { formdata, setFormData, formErrors, setFormErrors, handleChange, isChanged, setIsChanged } = useForm({
     username: '',
     firstName: '',
     lastName: '',
@@ -74,34 +74,36 @@ function Profile({ profile, updateProfile }) {
         />
       }
       <main id="profile-main">
-        {me ? <ProfileBody
+        {me && <ProfileBody
           formdata={formdata}
+          formErrors={formErrors}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           isChanged={isChanged}
-        /> :
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+        />}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {!me &&
             <aside>
               <h3>Following</h3>
               <div id="followers">
-                {formdata && formdata?.followers && formdata?.followers.map(follower => (
-                  <ProfileCard key={follower.id} {...follower} hideUsername={true} reverseUsername={true} />
-                ))}
+                {formdata && formdata.followers && formdata?.followers.length >= 1 ?
+                  formdata.followers.map(follower => (
+                    <ProfileCard key={follower.id} {...follower} hideUsername={true} reverseUsername={true} />
+                  )) : <p>No followers...</p>}
               </div>
             </aside>
-            <div id="posts">
-              <h3>Posts made by {formdata.username}</h3>
-              {posts && posts.map(post => (
-                <div className="post" key={post.id}>
-                  <small><Moment fromNow>{post.createdAt}</Moment></small>
-                  <p>{post.content}</p>
-                  <ProfileCard {...post.user} />
-                </div>
-              ))}
-            </div>
+          }
+          <div id="posts">
+            <h3>Posts made by {formdata.username}</h3>
+            {posts && posts.map(post => (
+              <div className="post" key={post.id}>
+                <small><Moment fromNow>{post.createdAt}</Moment></small>
+                <p>{post.content}</p>
+                <ProfileCard {...post.user} />
+              </div>
+            ))}
           </div>
-
-        }
+        </div>
       </main>
     </>
   )

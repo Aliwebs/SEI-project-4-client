@@ -1,4 +1,4 @@
-function ProfileBody({ formdata, handleChange, handleSubmit, isChanged }) {
+function ProfileBody({ formdata, handleChange, formErrors, handleSubmit, isChanged }) {
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -9,6 +9,7 @@ function ProfileBody({ formdata, handleChange, handleSubmit, isChanged }) {
           placeholder="Username"
           value={formdata.username || ''}
         />
+        {formErrors.username && formErrors.username.map(err => <p key={err}>{err}</p>)}
       </div>
       <div>
         <label>First Name</label>
@@ -18,6 +19,7 @@ function ProfileBody({ formdata, handleChange, handleSubmit, isChanged }) {
           placeholder="First Name"
           value={formdata.firstName || ''}
         />
+        {formErrors.firstName && formErrors.firstName.map(err => <p key={err}>{err}</p>)}
       </div>
       <div>
         <label>Last Name</label>
@@ -27,6 +29,7 @@ function ProfileBody({ formdata, handleChange, handleSubmit, isChanged }) {
           placeholder="Last Name"
           value={formdata.lastName || ''}
         />
+        {formErrors.lastName && formErrors.lastName.map(err => <p key={err}>{err}</p>)}
       </div>
       <div>
         <label>Date Of Birth</label>
@@ -36,6 +39,7 @@ function ProfileBody({ formdata, handleChange, handleSubmit, isChanged }) {
           type="date"
           value={formdata.dob || ''}
         />
+        {formErrors.dob && formErrors.dob.map(err => <p key={err}>{err}</p>)}
       </div>
       <button type="submit" className={`${isChanged ? 'button-alert' : ''}`}>Save Changes</button>
     </form>
