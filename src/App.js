@@ -25,22 +25,26 @@ function App() {
     })
       .then(res => setProfile(res.data))
       .catch(() => setIsErr(true))
-
-    return () => {
-
-    }
   }, [pathname])
+
+  const updateProfile = (user) => {
+    axios.get(`/api/auth/profile/${user.id}/`, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    })
+      .then(res => setProfile(res.data))
+      .catch(() => setIsErr(true))
+  }
 
   if (isLoading) {
     return null
   }
 
   return (
-    <ProfileContext.Provider value={{ profile }}>
+    <ProfileContext.Provider value={{ profile, updateProfile }}>
       {profile && <Navbar profile={profile} />}
       <Switch>
         <Route exact path="/">
-          <Login profile={profile} />
+          <Login profile={profile} onLogin={updateProfile} />
         </Route>
         <Route exact path="/register" component={Register} />
         <SecureRoute path="/home" >
@@ -48,7 +52,7 @@ function App() {
         </SecureRoute>
         <SecureRoute path="/profile/:id" component={Profile} />
         <SecureRoute path="/profile/">
-          <Profile profile={profile} setProfile={setProfile} />
+          <Profile profile={profile} updateProfile={updateProfile} />
         </SecureRoute>
       </Switch>
     </ProfileContext.Provider>

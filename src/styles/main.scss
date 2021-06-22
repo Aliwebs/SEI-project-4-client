@@ -256,9 +256,22 @@ form {
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   margin: 10px;
-  padding: 10px;
+  padding: 25px 10px;
   min-width: 300px;
   position: relative;
+
+  .post-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  img {
+    margin: 10px auto;
+  }
+
+  >.close {
+    left: 10px;
+  }
 }
 
 #add-post {
@@ -275,7 +288,9 @@ form {
     position: relative;
 
     textarea {
-      width: 430px;
+      min-width: 300px;
+      width: 432px;
+      max-width: 500px;
       height: 150px;
       padding: 12px 20px;
       box-sizing: border-box;
@@ -314,19 +329,17 @@ aside {
   .comment {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
     padding: 10px;
     margin: 10px 0px;
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
       rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     position: relative;
+    background-color: rgb(180, 180, 180);
   }
 
-  .timestamp {
-    align-self: flex-end;
-    justify-self: flex-end;
-  }
+
 
   .circle {
     width: 50px;
@@ -349,6 +362,12 @@ aside {
   background-color: grey !important;
 }
 
+.input {
+  border: 2px solid rgba($color: #a39e9e, $alpha: 0.5);
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
 .close {
   border: none;
   background: none;
@@ -357,10 +376,22 @@ aside {
   background-color: red;
   color: white;
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 4px;
+  right: 4px;
 }
 
 .close:hover {
   cursor: pointer;
+}
+
+
+@media (max-width:600px) {
+  aside {
+    display: none;
+  }
+
+  .circle {
+    width: 50px;
+    height: 50px;
+  }
 }

@@ -11,7 +11,7 @@ import ProfileBody from '../misc/ProfileBody'
 import ProfileHeader from '../misc/ProfileHeader'
 import ProfileCard from '../misc/ProfileCard'
 
-function Profile({ profile, setProfile }) {
+function Profile({ profile, updateProfile }) {
   const { id } = useParams()
   const [posts, setPosts] = useState(null)
   let me = false
@@ -50,10 +50,10 @@ function Profile({ profile, setProfile }) {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const res = await axios.put(`/api/auth/profile/${getPayload().sub}/`, formdata, {
+      await axios.put(`/api/auth/profile/${getPayload().sub}/`, formdata, {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
-      setProfile(res.data)
+      updateProfile({ id: getPayload().sub, token: getToken() })
       setIsChanged(false)
     } catch (err) {
       if (err?.response) {
@@ -84,11 +84,9 @@ function Profile({ profile, setProfile }) {
             <aside>
               <h3>Following</h3>
               <div id="followers">
-                {formdata && formdata?.followers.length < 1
-                  ? 'No followers.'
-                  : formdata.followers.map(follower => (
-                    <ProfileCard key={follower.id} {...follower} hideUsername={true} reverseUsername={true} />
-                  ))}
+                {formdata && formdata?.followers && formdata?.followers.map(follower => (
+                  <ProfileCard key={follower.id} {...follower} hideUsername={true} reverseUsername={true} />
+                ))}
               </div>
             </aside>
             <div id="posts">

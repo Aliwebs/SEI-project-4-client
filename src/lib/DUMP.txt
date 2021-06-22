@@ -1,0 +1,16 @@
+// const convertDate = (post) => {
+  //   const date = new Date(post.createdAt)
+  //   const list = date.toUTCString().split(' ')
+  //   if (date.getFullYear().toString() !== list[3]) {
+  //     return (`${list[1]} ${list[2]} ${list[3]}`)
+  //   }
+  //   return `${list[1]} ${list[2]} ${list[4]}`
+  // }
+
+  // const getTimeElapsed = (post) => {
+  //   const date = new Date(post.createdAt)
+  //   const time = Math.floor(date.getTime() / 1000)
+  //   const timeNow = Math.floor(Date.now() / 1000)
+  //   if (timeNow < 60) return new Date((timeNow - time) * 1000).toISOString().substr(12, 8)
+  //   return new Date((timeNow - time) * 1000).toISOString().substr(11, 8)
+  // }

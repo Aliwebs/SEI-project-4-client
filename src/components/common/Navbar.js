@@ -8,10 +8,20 @@ function Navbar({ profile }) {
     localStorage.removeItem('token')
     return history.push('/home')
   }
+
+  const handleSearch = () => {
+
+  }
+
+
   return (
     <nav>
+      <div className="modal">
+
+      </div>
       <div className="navbar-menu">
         <li><Link to='/'>Home</Link></li>
+        <li><input placeholder="search..." name="search" className="input" onChange={handleSearch} /></li>
       </div>
       <div className="navbar-end" onMouseLeave={() => setDropdown(false)}>
         <li>
@@ -31,15 +41,15 @@ function Navbar({ profile }) {
               </Link>
             </div>
             <div>
-              <button onClick={handleLogout}>
+              <Link to='/' onClick={handleLogout}>
                 Logout
-              </button>
+              </Link>
             </div>
           </div>
           }
         </li>
-      </div >
-    </nav >
+      </div>
+    </nav>
   )
 }
 

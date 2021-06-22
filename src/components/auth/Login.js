@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useHistory, Link, Redirect } from 'react-router-dom'
 import useForm from '../../hooks/useForm'
+import { getPayload } from '../../lib/auth'
 
-function Login({ profile }) {
+function Login({ profile, onLogin }) {
   const history = useHistory()
 
   const { formdata, formErrors, setFormErrors, handleChange } = useForm({
@@ -17,6 +18,7 @@ function Login({ profile }) {
     event.preventDefault()
     try {
       const res = await axios.post('/api/auth/login/', formdata)
+      onLogin({ token: res.data.token, id: getPayload().sub })
       localStorage.setItem('token', res.data.token)
       history.push('/home')
     } catch (err) {

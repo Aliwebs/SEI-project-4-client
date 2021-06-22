@@ -8,7 +8,7 @@ import ProfileCard from '../misc/ProfileCard'
 import { useState } from 'react'
 
 
-function PostCard({ id, content, createdAt, user, comments }) {
+function PostCard({ id, content, createdAt, attachments, user, comments, updateData, setUpdateData }) {
   const [refresh, setRefresh] = useState(false)
   const { formdata, handleChange } = useForm({
     content: '',
@@ -37,13 +37,30 @@ function PostCard({ id, content, createdAt, user, comments }) {
       })
       .catch(err => console.log(err?.response.data))
   }
-  comments.reverse()
+
+  const handlePostDelete = () => {
+    axios.delete(`/api/posts/${id}`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    })
+      .then(() => {
+        setUpdateData(!updateData)
+      })
+      .catch(err => console.log(err?.response.data))
+  }
+  comments = comments.sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  })
   return (
     <div className="post">
       {getPayload().sub === user.id &&
-        <button className="close" onClick={handleDelete} value={id}>X</button>}
-      <small><Moment fromNow>{createdAt}</Moment></small>
-      <p>{content}</p>
+        <button className="close" onClick={handlePostDelete} value={id}>X</button>}
+      <div className="post-content">
+
+        <h4>{content}</h4>
+        <small><Moment fromNow>{createdAt}</Moment></small>
+        {attachments.length > 0 ? <img width="500px" src={attachments[0]?.url} /> : <img width="500px" src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/600px-No_image_available.svg.png' />}
+
+      </div>
       <ProfileCard {...user} />
       <div id="comments">
         <form onSubmit={handleSubmit}>
@@ -58,17 +75,17 @@ function PostCard({ id, content, createdAt, user, comments }) {
           {comments && comments.map(comment => (
             <div key={comment.id} className="comment">
               {getPayload().sub === comment.owner.id &&
-                <button className="close" onClick={handleDelete} value={comment.id}>X</button>}
+                <button className="close" onTouchEnd={handleDelete} onClick={handleDelete} value={comment.id}>X</button>}
+              <ProfileCard {...comment.owner} hideUsername={true} />
               <div>
                 <p >{comment.content}</p>
                 <small clas="timestamp"><Moment fromNow>{comment.createdAt}</Moment></small>
               </div>
-              <ProfileCard {...comment.owner} />
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
