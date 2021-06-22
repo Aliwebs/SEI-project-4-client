@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import axios from 'axios'
 import { Switch, Route, useLocation } from 'react-router-dom'
 import { getToken, getPayload } from './lib/auth'
+
+export const ProfileContext = createContext(null)
 
 import Login from './components/auth/Login'
 import Profile from './components/auth/Profile'
@@ -23,6 +25,10 @@ function App() {
     })
       .then(res => setProfile(res.data))
       .catch(() => setIsErr(true))
+
+    return () => {
+
+    }
   }, [pathname])
 
   if (isLoading) {
@@ -30,7 +36,7 @@ function App() {
   }
 
   return (
-    <>
+    <ProfileContext.Provider value={{ profile }}>
       {profile && <Navbar profile={profile} />}
       <Switch>
         <Route exact path="/">
@@ -45,7 +51,7 @@ function App() {
           <Profile profile={profile} setProfile={setProfile} />
         </SecureRoute>
       </Switch>
-    </>
+    </ProfileContext.Provider>
   )
 }
 

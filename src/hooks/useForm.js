@@ -7,8 +7,13 @@ export default function useForm(initalState) {
 
   const handleChange = ({ target: { name, value } }) => {
     setIsChanged(true)
-    setFormData({ ...formdata, [name]: value })
-    setFormErrors({ ...formErrors, [name]: '' })
+    if (name === 'followers') {
+      setFormData({ ...formdata, followers: [value, ...formdata.followers] })
+      setFormErrors({ ...formErrors, [name]: '' })
+    } else {
+      setFormData({ ...formdata, [name]: value })
+      setFormErrors({ ...formErrors, [name]: '' })
+    }
   }
 
   return {

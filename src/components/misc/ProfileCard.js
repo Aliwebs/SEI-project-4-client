@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 import { getPayload } from '../../lib/auth'
 
-function ProfileCard({ profilePic, username, id }) {
+function ProfileCard({ profilePic, username, id, hideUsername, reverseUsername }) {
   return (
     <div id="profile-card">
-      <p>{username}</p>
-      <Link className="circle" to={id === getPayload().sub ? '/profile/' : `/profile/${id}`}>
+      {!hideUsername && <p>{username}</p>}
+      <Link className="circle" to={id === getPayload().sub || id === undefined ? '/profile/' : `/profile/${id}`}>
         <img src={profilePic} />
       </Link>
+      {reverseUsername && <p style={{ margin: '10px' }}>{username}</p>}
     </div>
   )
 }

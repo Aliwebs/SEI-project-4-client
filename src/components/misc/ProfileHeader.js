@@ -1,18 +1,46 @@
-import { useState } from 'react'
+import axios from 'axios'
+import ImageUpload from '../upload/ImageUpload'
+import { ProfileContext } from '../../App'
+import { getPayload, getToken } from '../../lib/auth'
+import { useEffect, useState, useContext } from 'react'
 
-function ProfileHeader({ formdata, handleChange, me }) {
-  const [modalState, setModalState] = useState(null)
+function ProfileHeader({ formdata, handleChange, me, id }) {
+  const [isFollowing, setIsFollowing] = useState(false)
+  const { profile } = useContext(ProfileContext)
+  useEffect(() => {
+    const users = profile.followers.map(follower => follower.id)
+    if (users && users.includes(id)) {
+      setIsFollowing(true)
+    }
+  }, [setIsFollowing, profile, id])
+
+  const handleBackgroundUpload = (url) => {
+    handleChange({ target: { name: 'backgroundPic', value: url } })
+  }
+  const handleProfileUpload = (url) => {
+    handleChange({ target: { name: 'profilePic', value: url } })
+  }
+
+  const handleFollow = () => {
+    // handleChange({ target: { name: 'followers', value: id } })
+    axios.post(`/api/auth/profile/${getPayload().sub}/${id}/`, null, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    })
+      .then(() => setIsFollowing(!isFollowing))
+      .catch(err => console.log(err.response.data))
+  }
   return (
     <header>
       <div id="profile-container" style={{ backgroundImage: `url(${formdata.backgroundPic || ''})` }}>
         {me ?
           <>
-            <div className="circle" onClick={() => setModalState('profile')}>
+            <div className="circle">
               <img src={formdata.profilePic || ''} />
-              <p>Edit</p>
+              <ImageUpload onUpload={handleProfileUpload} isProfileImg={true} />
             </div>
             <h6 className="username">{formdata.username || ''}</h6>
-            <button onClick={() => setModalState('background')} type="button">Edit</button>
+            {/* <button onClick={() => setModalState('background')} type="button">Edit</button> */}
+            <ImageUpload onUpload={handleBackgroundUpload} />
           </>
           :
           <>
@@ -20,40 +48,12 @@ function ProfileHeader({ formdata, handleChange, me }) {
               <img src={formdata.profilePic || ''} />
             </div>
             <h6 className="username">{formdata.username || ''}</h6>
-            <button type="button">Follow</button>
+            <button onClick={handleFollow} className="btn-danger" type="button">{isFollowing ? 'Unfollow' : 'Follow'} </button>
           </>
         }
 
 
       </div>
-      {modalState === 'background' &&
-        <>
-          <div className="modal">
-            <div onBlur={() => setModalState(null)}>
-              <label>Change Background Picture</label>
-              <input
-                onChange={handleChange}
-                name="backgroundPic"
-                value={formdata.backgroundPic || ''}
-              />
-            </div>
-          </div>
-          <div className="modal-close">
-            <span>X</span>
-          </div>
-        </>
-      }
-      {modalState === 'profile' &&
-        <div className="modal">
-          <div onBlur={() => setModalState(null)}>
-            <label>Change Profile Picture</label>
-            <input
-              onChange={handleChange}
-              name="profilePic"
-              value={formdata.profilePic || ''}
-            />
-          </div>
-        </div>}
     </header>
   )
 
