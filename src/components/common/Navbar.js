@@ -9,16 +9,16 @@ function Navbar({ profile }) {
     return history.push('/home')
   }
 
-  const handleSearch = ({ target: { name, value } }) => {
-    
-  }
+  // const handleSearch = ({ target: { name, value } }) => {
+
+  // }
 
 
   return (
     <nav>
       <div className="navbar-menu">
         <li><Link to='/'>Home</Link></li>
-        <li><input placeholder="search..." name="search" className="input" onChange={handleSearch} /></li>
+        <li><input placeholder="search..." name="search" className="input" /></li>
       </div>
       <div className="navbar-end" onMouseLeave={() => setDropdown(false)}>
         <li>

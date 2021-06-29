@@ -1,8 +1,7 @@
-import axios from 'axios'
 import ImageUpload from '../upload/ImageUpload'
 import { ProfileContext } from '../../App'
-import { getPayload, getToken } from '../../lib/auth'
 import { useEffect, useState, useContext } from 'react'
+import { followUser } from '../../lib/api'
 
 function ProfileHeader({ formdata, handleChange, me, id }) {
   const [isFollowing, setIsFollowing] = useState(false)
@@ -23,9 +22,7 @@ function ProfileHeader({ formdata, handleChange, me, id }) {
 
   const handleFollow = () => {
     // handleChange({ target: { name: 'followers', value: id } })
-    axios.post(`/api/auth/profile/${getPayload().sub}/${id}/`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
+    followUser(id)
       .then(() => setIsFollowing(!isFollowing))
       .catch(err => console.log(err.response.data))
   }

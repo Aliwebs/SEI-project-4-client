@@ -1,19 +1,20 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Moment from 'react-moment'
 
 
 import useForm from '../../hooks/useForm'
-import { getToken, getPayload } from '../../lib/auth'
+import { getUserId } from '../../lib/auth'
 
 import ProfileBody from '../misc/ProfileBody'
 import ProfileHeader from '../misc/ProfileHeader'
 import ProfileCard from '../misc/ProfileCard'
+import { getPosts, getProfile, toggleFollowUser } from '../../lib/api'
 
 function Profile({ profile, updateProfile }) {
   const { id } = useParams()
   const [posts, setPosts] = useState(null)
+  const userId = getUserId()
   let me = false
   if (!id) {
     me = true
@@ -31,38 +32,39 @@ function Profile({ profile, updateProfile }) {
     if (!profile && !id) return
 
     if (id) {
-      axios.get(`/api/auth/profile/${id}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      })
+      getProfile(id)
         .then(res => setFormData(res.data))
         .then(() => {
-          return axios.get(`/api/posts/by/${id}/`, {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          })
+          return getPosts(id)
         })
         .then(res => setPosts(res.data))
         .catch((err) => console.log(err))
     } else {
       setFormData(profile)
+      getPosts(userId)
+        .then(res => setPosts(res.data))
+        .catch((err) => console.log(err))
     }
-  }, [profile, setFormData, id])
+  }, [profile, setFormData, id, userId])
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
-    try {
-      await axios.put(`/api/auth/profile/${getPayload().sub}/`, formdata, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+    const followers = formdata.followers.map(follower => follower.id)
+
+    toggleFollowUser({ ...formdata, followers: followers })
+      .then(() => {
+        updateProfile({ id: getUserId() })
+        setIsChanged(false)
       })
-      updateProfile({ id: getPayload().sub, token: getToken() })
-      setIsChanged(false)
-    } catch (err) {
-      if (err?.response) {
-        console.log(err.response.data)
-        setFormErrors(err.response.data)
-      }
-      console.log(err)
-    }
+      .catch(err => {
+        if (err?.response) {
+          console.log(err.response.data)
+          setFormErrors(err.response.data)
+        }
+        console.log(err)
+      })
   }
+  console.log(posts)
   return (
     <>
       {formdata &&

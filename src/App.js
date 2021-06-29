@@ -1,7 +1,5 @@
 import { useState, useEffect, createContext } from 'react'
-import axios from 'axios'
 import { Switch, Route, useLocation } from 'react-router-dom'
-import { getToken, getPayload } from './lib/auth'
 
 export const ProfileContext = createContext(null)
 
@@ -11,34 +9,27 @@ import Register from './components/auth/Register'
 import Home from './components/common/Home'
 import Navbar from './components/common/Navbar'
 import SecureRoute from './components/common/SecureRoute'
+import { getProfile } from './lib/api'
 
 
 function App() {
   const [profile, setProfile] = useState(null)
-  const [isErr, setIsErr] = useState(false)
-  const isLoading = !profile && !isErr
   const { pathname } = useLocation()
 
   useEffect(() => {
-    axios.get(`/api/auth/profile/${getPayload().sub}/`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
-      .then(res => setProfile(res.data))
-      .catch(() => setIsErr(true))
+    const token = localStorage.getItem('token')
+    if (token) {
+      getProfile()
+        .then(res => setProfile(res.data))
+        .catch(err => console.log(err.response))
+    }
   }, [pathname])
 
   const updateProfile = (user) => {
-    axios.get(`/api/auth/profile/${user.id}/`, {
-      headers: { Authorization: `Bearer ${user.token}` },
-    })
+    getProfile(user.id)
       .then(res => setProfile(res.data))
-      .catch(() => setIsErr(true))
+      .catch(err => console.log(err.response))
   }
-
-  if (isLoading) {
-    return null
-  }
-
   return (
     <ProfileContext.Provider value={{ profile, updateProfile }}>
       {profile && <Navbar profile={profile} />}

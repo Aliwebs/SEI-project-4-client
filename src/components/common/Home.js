@@ -1,10 +1,10 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { getToken } from '../../lib/auth'
+
 import ProfileCard from '../misc/ProfileCard'
 import useForm from '../../hooks/useForm'
 import PostCard from '../posts/PostCard'
 import ImageUpload from '../upload/ImageUpload'
+import { getAllPosts, postPost } from '../../lib/api'
 
 function Home(props) {
   const [posts, setPosts] = useState(null)
@@ -16,18 +16,12 @@ function Home(props) {
     },
   })
   useEffect(() => {
-    axios.get('/api/posts/', {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
+    getAllPosts()
       .then(res => {
-        const followers = props.followers.map(follower => follower.username)
-        const myFollows = res.data.filter(post => followers.includes(post.user.username))
-        const filteredPosts = [...myFollows, ...res.data?.filter(post => !followers.includes(post.user.username))]
-        setPosts(filteredPosts)
+        setPosts(res.data)
       })
       .catch(err => console.log(err))
-  }, [updateData, props.followers])
-
+  }, [updateData, props])
 
   const handleImageUpload = (url) => {
     handleChange({ target: { name: 'attachments', value: { url: url } } })
@@ -35,16 +29,16 @@ function Home(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    axios.post('/api/posts/', formdata, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
+    postPost(formdata)
       .then(() => {
         handleChange({ target: { name: 'content', value: '' } })
         handleChange({ target: { name: 'attachments', value: { url: '' } } })
-        formdata.attachments.url = ''
         setUpdateData(!updateData)
       })
       .catch(err => console.log(err?.response.data))
+  }
+  if (posts) {
+    console.log(posts)
   }
   return (
     <div style={{ display: 'flex' }}>

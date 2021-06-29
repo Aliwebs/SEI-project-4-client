@@ -1,6 +1,6 @@
-import axios from 'axios'
 import { useHistory, Link, Redirect } from 'react-router-dom'
 import useForm from '../../hooks/useForm'
+import { register } from '../../lib/auth'
 
 function Register({ profile }) {
   const history = useHistory()
@@ -18,7 +18,7 @@ function Register({ profile }) {
   const handleSubmit = async event => {
     event.preventDefault()
 
-    axios.post('/api/auth/register/', formdata)
+    register(formdata)
       .then(() => history.push('/'))
       .catch(err => setFormErrors(err.response.data))
   }

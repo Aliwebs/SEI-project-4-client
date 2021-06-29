@@ -1,7 +1,6 @@
-import axios from 'axios'
 import { useHistory, Link, Redirect } from 'react-router-dom'
 import useForm from '../../hooks/useForm'
-import { getPayload } from '../../lib/auth'
+import { getUserId, login } from '../../lib/auth'
 
 function Login({ profile, onLogin }) {
   const history = useHistory()
@@ -14,19 +13,20 @@ function Login({ profile, onLogin }) {
   if (profile) {
     return <Redirect to="/home" />
   }
-  const handleSubmit = async event => {
+  const handleSubmit = event => {
     event.preventDefault()
-    try {
-      const res = await axios.post('/api/auth/login/', formdata)
-      onLogin({ token: res.data.token, id: getPayload().sub })
-      localStorage.setItem('token', res.data.token)
-      history.push('/home')
-    } catch (err) {
-      const errors = err.response ? err.response.data : undefined
-      if (errors) {
-        setFormErrors(errors)
-      }
-    }
+    login(formdata)
+      .then(res => {
+        onLogin({ token: res.data.token, id: getUserId() })
+        localStorage.setItem('token', res.data.token)
+        history.push('/home')
+      })
+      .catch(err => {
+        const errors = err.response ? err.response.data : undefined
+        if (errors) {
+          setFormErrors(errors)
+        }
+      })
   }
 
   return (

@@ -1,58 +1,72 @@
-import axios from 'axios'
 import Moment from 'react-moment'
 
-import { getToken, getPayload } from '../../lib/auth'
+import { getUserId } from '../../lib/auth'
 
 import useForm from '../../hooks/useForm'
 import ProfileCard from '../misc/ProfileCard'
 import { useState } from 'react'
+import { deletePost, toggleLikePost, postComment, deleteComment } from '../../lib/api'
 
 
-function PostCard({ id, content, createdAt, attachments, user, comments, updateData, setUpdateData }) {
+function PostCard({ id, content, createdAt, attachments, likedBy, user, comments, updateData, setUpdateData }) {
   const [refresh, setRefresh] = useState(false)
+  const [commentsData, setCommentsData] = useState(comments)
   const { formdata, handleChange } = useForm({
     content: '',
   })
+  const userId = getUserId()
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    axios.post(`/api/posts/${id}/comments/`, formdata, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
+    postComment(id, formdata)
       .then((res) => {
-        comments.unshift(res.data)
-        setRefresh(!refresh)
+        handleChange({ target: { name: 'content', value: '' } })
+        setCommentsData([res.data, ...commentsData])
       })
       .catch(err => console.log(err?.response.data))
   }
 
   const handleDelete = ({ target: { value } }) => {
-    axios.delete(`/api/posts/comments/${value}`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
-      .then(() => {
-        comments = comments.filter(comment => comment.id !== value)
-        setRefresh(!refresh)
-      })
-      .catch(err => console.log(err?.response.data))
+    if (window.confirm('Do you really want to delete this comment?')) {
+      deleteComment(value)
+        .then(() => {
+          setCommentsData([...comments.filter(comment => comment.id !== Number(value))])
+        })
+        .catch(err => console.log(err?.response.data))
+    }
   }
 
   const handlePostDelete = () => {
-    axios.delete(`/api/posts/${id}`, {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    })
-      .then(() => {
-        setUpdateData(!updateData)
-      })
-      .catch(err => console.log(err?.response.data))
+    if (window.confirm('Do  you really want to delete this post?')) {
+      deletePost(id)
+        .then(() => {
+          setUpdateData(!updateData)
+        })
+        .catch(err => console.log(err?.response.data))
+    }
   }
-  comments = comments.sort((a, b) => {
+
+  const handleLike = () => {
+    likedBy.push(userId)
+    toggleLikePost(id, { likedBy: likedBy, content: content })
+      .then(() => setRefresh(!refresh))
+      .catch(err => console.log(err.response.data))
+  }
+
+  const handleDislike = () => {
+    likedBy.pop(userId)
+    toggleLikePost(id, { likedBy: likedBy, content: content })
+      .then(() => setRefresh(!refresh))
+      .catch(err => console.log(err.response.data))
+  }
+
+  comments = commentsData?.sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   })
   return (
     <div className="post">
-      {getPayload().sub === user.id &&
+      {userId === user.id &&
         <button className="close" onClick={handlePostDelete} value={id}>X</button>}
       <div className="post-content">
 
@@ -62,6 +76,12 @@ function PostCard({ id, content, createdAt, attachments, user, comments, updateD
 
       </div>
       <ProfileCard {...user} />
+      <div style={{ display: 'flex', alignItems: 'c' }}>
+        {likedBy.includes(userId) ? <i onClick={handleDislike} className="fas fa-heart"></i> : <i onClick={handleLike} className="far fa-heart"></i>}
+        <p style={{ margin: '5px 0px 0px 10px' }}>{likedBy.length}</p>
+        <i style={{ margin: '0px 10px' }} className="far fa-comment-alt"></i>
+        {comments && <p style={{ margin: '0px 5px' }}>{comments.length}</p>}
+      </div>
       <div id="comments">
         <form onSubmit={handleSubmit}>
           <input
@@ -69,6 +89,7 @@ function PostCard({ id, content, createdAt, attachments, user, comments, updateD
             onChange={handleChange}
             name="content"
             maxLength="100"
+            value={formdata.content}
           />
           <p>Characters remaining: {100 - formdata.content.length}</p>
           <button>Comment</button>
@@ -76,7 +97,7 @@ function PostCard({ id, content, createdAt, attachments, user, comments, updateD
         <div>
           {comments && comments.map(comment => (
             <div key={comment.id} className="comment">
-              {getPayload().sub === comment.owner.id &&
+              {userId === comment.owner.id &&
                 <button className="close" onTouchEnd={handleDelete} onClick={handleDelete} value={comment.id}>X</button>}
               <ProfileCard {...comment.owner} hideUsername={true} />
               <div>
@@ -87,7 +108,7 @@ function PostCard({ id, content, createdAt, attachments, user, comments, updateD
           ))}
         </div>
       </div>
-    </div >
+    </div>
   )
 }
 

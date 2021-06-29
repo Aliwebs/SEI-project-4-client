@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export function getToken() {
   return window.localStorage.getItem('token')
 }
@@ -8,6 +10,14 @@ export function getPayload() {
   const parts = token.split('.')
   if (parts.length < 3) return false
   return JSON.parse(atob(parts[1]))
+}
+
+export function getUserId() {
+  return getPayload().sub
+}
+
+export function getUsername() {
+  return getPayload().user
 }
 
 export function isAuthenticated() {
@@ -21,4 +31,14 @@ export function isOwner(userId) {
   const payload = getPayload()
   if (!payload) return false
   return userId === payload.sub
+}
+
+
+// Login and register
+export function login(formdata) {
+  return axios.post('/api/auth/login/', formdata)
+}
+
+export function register(formdata) {
+  return axios.post('/api/auth/register/', formdata)
 }
