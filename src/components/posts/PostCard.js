@@ -49,14 +49,14 @@ function PostCard({ id, content, createdAt, attachments, likedBy, user, comments
 
   const handleLike = () => {
     likedBy.push(userId)
-    toggleLikePost(id, { likedBy: likedBy, content: content })
+    toggleLikePost(id, { likedBy: likedBy, content: content, user: user.id })
       .then(() => setRefresh(!refresh))
       .catch(err => console.log(err.response.data))
   }
 
   const handleDislike = () => {
     likedBy.pop(userId)
-    toggleLikePost(id, { likedBy: likedBy, content: content })
+    toggleLikePost(id, { likedBy: likedBy, content: content, user: user.id })
       .then(() => setRefresh(!refresh))
       .catch(err => console.log(err.response.data))
   }

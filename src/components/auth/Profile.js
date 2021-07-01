@@ -10,10 +10,12 @@ import ProfileBody from '../misc/ProfileBody'
 import ProfileHeader from '../misc/ProfileHeader'
 import ProfileCard from '../misc/ProfileCard'
 import { getPosts, getProfile, toggleFollowUser } from '../../lib/api'
+import PostCard from '../posts/PostCard'
 
 function Profile({ profile, updateProfile }) {
   const { id } = useParams()
   const [posts, setPosts] = useState(null)
+  const [updateData, setUpdateData] = useState(false)
   const userId = getUserId()
   let me = false
   if (!id) {
@@ -98,11 +100,7 @@ function Profile({ profile, updateProfile }) {
           <div id="posts">
             <h3>Posts made by {formdata.username}</h3>
             {posts && posts.map(post => (
-              <div className="post" key={post.id}>
-                <small><Moment fromNow>{post.createdAt}</Moment></small>
-                <p>{post.content}</p>
-                <ProfileCard {...post.user} />
-              </div>
+              <PostCard key={post.id} {...post} updateData={updateData} setUpdateData={setUpdateData} />
             ))}
           </div>
         </div>

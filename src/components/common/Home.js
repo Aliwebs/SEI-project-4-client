@@ -9,7 +9,8 @@ import { getAllPosts, postPost } from '../../lib/api'
 function Home(props) {
   const [posts, setPosts] = useState(null)
   const [updateData, setUpdateData] = useState(false)
-  const { formdata, handleChange } = useForm({
+  const [show, setShow] = useState(true)
+  const { formdata, setFormData, handleChange } = useForm({
     content: '',
     attachments: {
       url: '',
@@ -29,17 +30,23 @@ function Home(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    postPost(formdata)
+    postPost({ content: formdata.content, attachments: { url: formdata.attachments.url } })
       .then(() => {
-        handleChange({ target: { name: 'content', value: '' } })
-        handleChange({ target: { name: 'attachments', value: { url: '' } } })
+        setFormData({
+          content: '',
+          attachments: {
+            url: '',
+          },
+        })
+        setShow(false)
         setUpdateData(!updateData)
       })
       .catch(err => console.log(err?.response.data))
   }
-  if (posts) {
-    console.log(posts)
+  if (formdata) {
+    console.log(formdata)
   }
+
   return (
     <div style={{ display: 'flex' }}>
       <aside>
@@ -67,7 +74,7 @@ function Home(props) {
                 maxLength="250"
               />
               <p>Characters remaining: {250 - formdata.content.length}</p>
-              <ImageUpload onUpload={handleImageUpload} isPost />
+              <ImageUpload onUpload={handleImageUpload} isPost show={show} setShow={setShow} />
               <div className="buttons">
                 <button className="btn-black" type="submit">Post</button>
               </div>

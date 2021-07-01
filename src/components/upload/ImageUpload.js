@@ -3,13 +3,14 @@ const uploadUrl = process.env.REACT_APP_CLOUDINARY_URL
 const backgroundUploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET_BACKGROUND
 const profileUploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET_PROFILE
 
-function ImageUpload({ onUpload, isProfileImg, isPost }) {
+function ImageUpload({ onUpload, isProfileImg, isPost, show, setShow }) {
   const [imageSource, setImageSource] = useState(null)
   let uploadPreset = backgroundUploadPreset
   if (isProfileImg) {
     uploadPreset = profileUploadPreset
   }
   function handleUpload() {
+    setShow(true)
     window.cloudinary
       .createUploadWidget(
         {
@@ -30,7 +31,7 @@ function ImageUpload({ onUpload, isProfileImg, isPost }) {
   }
   return (
     <>
-      {isPost && imageSource && <img width="400px" src={imageSource} />}
+      {(isPost && show) && imageSource && <img width="400px" src={imageSource} />}
       <button onClick={handleUpload} type="button" className={isProfileImg ? 'profile-edit' : 'btn-grey'}>{
         isPost ? !imageSource ? 'Add image' : 'Change Image' :
           !isProfileImg ? 'Change Background Image' :

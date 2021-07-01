@@ -26,9 +26,11 @@ function App() {
   }, [pathname])
 
   const updateProfile = (user) => {
-    getProfile(user.id)
-      .then(res => setProfile(res.data))
-      .catch(err => console.log(err.response))
+    if (localStorage.getItem('token')) {
+      getProfile(user.id)
+        .then(res => setProfile(res.data))
+        .catch(err => console.log(err.response))
+    }
   }
   return (
     <ProfileContext.Provider value={{ profile, updateProfile }}>
