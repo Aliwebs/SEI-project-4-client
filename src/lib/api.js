@@ -3,6 +3,7 @@ import axios from 'axios'
 import { getToken, getUserId } from './auth'
 import { baseUrl } from '../config'
 
+
 function getHeaders() {
   return {
     headers: { Authorization: `Bearer ${getToken()}` },

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { baseUrl } from '../config'
 
 export function getToken() {
   return window.localStorage.getItem('token')
@@ -36,9 +37,9 @@ export function isOwner(userId) {
 
 // Login and register
 export function login(formdata) {
-  return axios.post('/api/auth/login/', formdata)
+  return axios.post(`${baseUrl}/auth/login/`, formdata)
 }
 
 export function register(formdata) {
-  return axios.post('/api/auth/register/', formdata)
+  return axios.post(`${baseUrl}/auth/register/`, formdata)
 }
