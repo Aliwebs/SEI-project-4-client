@@ -1,20 +1,10 @@
-# Postbook
+# [Postbook](https://elated-williams-fb7045.netlify.app/)
 
-# Summary
-# Deployed Project Link
+## Summary
 
-This was a full stack appliction made with a React frontend and with a Django backend. This is a social media application clone, inspiration was taken from Twitter and Facebook. The main goal was to get all the basic functions of a social media app within the timeframe of this project, which was a little over a week. 
-- [Postbook](#postbook)
-- [Summary](#summary)
-- [Deployed Project Link](#deployed-project-link)
-- [Brief](#brief)
-- [Technologies Used](#technologies-used)
-- [Approach Taken](#approach-taken)
-- [Visuals](#visuals)
-- [Bugs, Blockers & Wins](#bugs-blockers--wins)
-- [Future Features](#future-features)
-- [Key Learnings](#key-learnings)
-# Brief
+This was a full stack appliction made with a React frontend and with a Django backend. This is a social media clone,a lot of inspiration was taken from Twitter and Facebook. The main goal was to get all the basic functions of a social media app within the timeframe of this project, which was a little over a week.
+
+## Brief
 
 - **Build a full-stack application** by making your own backend and your own front-end
 - **Use a Python Django API** using Django REST Framework to serve your data from a Postgres database
@@ -24,7 +14,17 @@ This was a full stack appliction made with a React frontend and with a Django ba
 - **Have a visually impressive design** to kick your portfolio up a notch and have something to wow future clients & employers. **ALLOW** time for this.
 - **Be deployed online** so it's publicly accessible.
 
-# Technologies Used
+- [Postbook](#postbook)
+  - [Summary](#summary)
+  - [Brief](#brief)
+  - [Technologies Used](#technologies-used)
+  - [Approach Taken](#approach-taken)
+  - [Screenshots](#screenshots)
+  - [Bugs](#bugs)
+  - [Future Features](#future-features)
+  - [Key Learnings](#key-learnings)
+
+## Technologies Used
 
 - HTML5
 - SASS
@@ -37,12 +37,12 @@ This was a full stack appliction made with a React frontend and with a Django ba
 - Heroku
 - Netlify
 
-# Approach Taken 
+## Approach Taken
 
-I started by making an ERD diagram for my database models. 
+I started by making an ERD diagram for my database models. The general idea is that each post has an owner and that is the user who made the post, attachments and comments have a post id to refrence which post they belong to. Some of the tables in the diagram where not created as they where part of stretch goals I could not get to.
 ![ERD diagram](./readme-assets/ERD.png)
 
-Then I wrote the models for the post object. 
+Then I wrote the models for the post object and all the other models, I have put the post model below as an example.
 
 ```python
 class Post(models.Model):
@@ -62,12 +62,32 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.content}'
 ```
+
 Also the serializers for the post object.
 
-# Visuals 
+## Screenshots 
 
-# Bugs, Blockers & Wins
+Login
+![Login](./readme-assets/login.PNG)
+Register
+![Register](./readme-assets/register.PNG)
+Home
+![home](./readme-assets/home.PNG)
+Profile
+![Profile](./readme-assets/profile.PNG)
 
-# Future Features 
+## Bugs
 
-# Key Learnings
+- When logging out user is not taken to the login page, instead it goes to a blank page and the page needs to be refreshed. This bug was related with react component unmount which I could not solve until the end of the project.
+- Like counter will bug out sometimes.
+
+## Future Features 
+
+- Add a for you page.
+- Remove posts made by user from feed.
+- Add messaging.
+- Improve the user journey.
+
+## Key Learnings
+
+I learnt a lot during this project as it was my first solo full stack project. Working solo I had a lot more flexibilty when making decisions and altough I saterted out with estimates for project to get to the MVP stage in 4 days it took a lot longer than expected. This was mainly due to the fact that I had used bulma in the last 2 projects and writing just CSS again took some time alongside other issues I faced in the backend. Overall I learnt the importance of having a project timeline and a clear plan with daily tasks which I did not use.
