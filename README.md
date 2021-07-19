@@ -1,24 +1,73 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) GA London React Template
+# Postbook
 
-## Update the Proxy Server
+# Summary
+# Deployed Project Link
 
-By default, the proxy server is set up to point at port 8000, if you need to do so update in `setupProxy.js` where commented.
+This was a full stack appliction made with a React frontend and with a Django backend. This is a social media application clone, inspiration was taken from Twitter and Facebook. The main goal was to get all the basic functions of a social media app within the timeframe of this project, which was a little over a week. 
+- [Postbook](#postbook)
+- [Summary](#summary)
+- [Deployed Project Link](#deployed-project-link)
+- [Brief](#brief)
+- [Technologies Used](#technologies-used)
+- [Approach Taken](#approach-taken)
+- [Visuals](#visuals)
+- [Bugs, Blockers & Wins](#bugs-blockers--wins)
+- [Future Features](#future-features)
+- [Key Learnings](#key-learnings)
+# Brief
 
-## Using NPM
+- **Build a full-stack application** by making your own backend and your own front-end
+- **Use a Python Django API** using Django REST Framework to serve your data from a Postgres database
+- **Consume your API with a separate front-end** built with React
+- **Be a complete product** which most likely means multiple relationships and CRUD functionality for at least a couple of models
+- **Implement thoughtful user stories/wireframes** that are significant enough to help you know which features are core MVP and which you can cut
+- **Have a visually impressive design** to kick your portfolio up a notch and have something to wow future clients & employers. **ALLOW** time for this.
+- **Be deployed online** so it's publicly accessible.
 
-`npm run start` or `npm run dev`  to run the development server
+# Technologies Used
 
-`npm run build` to create a build directory
+- HTML5
+- SASS
+- JavaScript
+- React
+- Django
+- Python
+- PostgreSQL
+- Git & Github
+- Heroku
+- Netlify
 
-## Using Yarn
+# Approach Taken 
 
-`yarn start` or `yarn dev`  to run the development server
+I started by making an ERD diagram for my database models. 
+![ERD diagram](./readme-assets/ERD.png)
 
-`yarn build` to create a build directory
+Then I wrote the models for the post object. 
 
-### ⚠️
+```python
+class Post(models.Model):
+    content = models.TextField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True, auto_now=True)
+    user = models.ForeignKey(
+        'jwt_auth.User',
+        related_name='posts',
+        on_delete=models.CASCADE
+    )
+    liked_by = models.ManyToManyField(
+        'jwt_auth.User',
+        blank=True
+    )
 
-To prevent the `failed-to-compile` issue for linter errors like `no-unsed-vars`, rename the `.env.example` to `.env` and restart your development server. Note this will only change the behaviour of certain linter errors to now be warnings, and is added just to allow your code to compile in development. These errors should still be fixed and other errors will still result in the code being unable to compile
+    def __str__(self):
+        return f'{self.content}'
+```
+Also the serializers for the post object.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Visuals 
 
+# Bugs, Blockers & Wins
+
+# Future Features 
+
+# Key Learnings
