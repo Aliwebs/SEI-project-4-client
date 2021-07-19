@@ -2,7 +2,7 @@
 
 ## Summary
 
-This was a full stack appliction made with a React frontend and with a Django backend. This is a social media clone,a lot of inspiration was taken from Twitter and Facebook. The main goal was to get all the basic functions of a social media app within the timeframe of this project, which was a little over a week.
+This was a full stack application made with a React frontend and with a Django backend. This is a social media clone,a lot of inspiration was taken from Twitter and Facebook. The main goal was to get all the basic functions of a social media app within the timeframe of this project, which was a little over a week.
 
 ## Brief
 
@@ -39,7 +39,7 @@ This was a full stack appliction made with a React frontend and with a Django ba
 
 ## Approach Taken
 
-I started by making an ERD diagram for my database models. The general idea is that each post has an owner and that is the user who made the post, attachments and comments have a post id to refrence which post they belong to. Some of the tables in the diagram where not created as they where part of stretch goals I could not get to.
+I started by making an ERD diagram for my database models. The general idea is that each post has an owner and that is the user who made the post, attachments and comments have a post id to reference which post they belong to. Some of the tables in the diagram were not created as they were part of stretch goals I could not get to.
 ![ERD diagram](./readme-assets/ERD.png)
 
 Then I wrote the models for the post object and all the other models, I have put the post model below as an example.
@@ -78,16 +78,17 @@ Profile
 
 ## Bugs
 
-- When logging out user is not taken to the login page, instead it goes to a blank page and the page needs to be refreshed. This bug was related with react component unmount which I could not solve until the end of the project.
-- Like counter will bug out sometimes.
+- When a logged out user is not taken to the login page, instead it goes to a blank page and the page needs to be refreshed. This bug was related to react component unmount which I could not solve until the end of the project.
+- Like counters will bug out sometimes.
 
 ## Future Features 
 
-- Add a for you page.
-- Remove posts made by user from feed.
+- Add a page for you.
+- Remove posts made by the user from the feed.
 - Add messaging.
 - Improve the user journey.
 
 ## Key Learnings
 
-I learnt a lot during this project as it was my first solo full stack project. Working solo I had a lot more flexibilty when making decisions and altough I saterted out with estimates for project to get to the MVP stage in 4 days it took a lot longer than expected. This was mainly due to the fact that I had used bulma in the last 2 projects and writing just CSS again took some time alongside other issues I faced in the backend. Overall I learnt the importance of having a project timeline and a clear plan with daily tasks which I did not use.
+I learnt a lot during this project as it was my first solo full stack project. Working solo I had a lot more flexibility when making decisions and although I started out with estimates for the project to get to the MVP stage in 4 days it took a lot longer than expected. This was mainly due to the fact that I had used bulma in the last 2 projects and writing just CSS again took some time alongside other issues I faced in the backend. Overall I learnt the importance of having a project timeline and a clear plan with daily tasks which I did not use.
+
