@@ -206,15 +206,19 @@ def get(self, _request):
 ## Screenshots
 
 Login
+
 ![Login](/readme-assets/login.png)
 
 Register
+
 ![Register](/readme-assets/register.png)
 
 Home
+
 ![home](/readme-assets/home.png)
 
 Profile
+
 ![Profile](/readme-assets/profile.png)
 
 ## Bugs
