@@ -1,8 +1,6 @@
 import { useState, useEffect, createContext } from 'react'
 import { Switch, Route, useLocation } from 'react-router-dom'
 
-export const ProfileContext = createContext(null)
-
 import Login from './components/auth/Login'
 import Profile from './components/auth/Profile'
 import Register from './components/auth/Register'
@@ -33,7 +31,7 @@ function App() {
     }
   }
   return (
-    <ProfileContext.Provider value={{ profile, updateProfile }}>
+    <>
       {profile && <Navbar profile={profile} />}
       <Switch>
         <Route exact path="/">
@@ -48,7 +46,7 @@ function App() {
           <Profile profile={profile} updateProfile={updateProfile} />
         </SecureRoute>
       </Switch>
-    </ProfileContext.Provider>
+    </>
   )
 }
 

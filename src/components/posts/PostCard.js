@@ -102,7 +102,7 @@ function PostCard({ id, content, createdAt, attachments, likedBy, user, comments
               <ProfileCard {...comment.owner} hideUsername={true} />
               <div>
                 <p >{comment.content}</p>
-                <small clas="timestamp"><Moment fromNow>{comment.createdAt}</Moment></small>
+                <small className="timestamp"><Moment fromNow>{comment.createdAt}</Moment></small>
               </div>
             </div>
           ))}
